@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The AI Verification Protocol — vprotocol.21no.de</title>
+  <meta name="description" content="Diagnose, repair, and measure verification debt in AI-generated code. A multi-agent pipeline that derives η from signals, tracks Ci/Cv ratios, and produces machine-readable certificates." />
+  <meta name="theme-color" content="#0a0a0b" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vprotocol.21no.de" />
+  <meta property="og:title" content="The AI Verification Protocol" />
+  <meta property="og:description" content="Diagnose, repair, and measure — the operational answer to AI verification debt." />
+  <meta property="og:image" content="https://vprotocol.21no.de/og.svg" />
+  <meta property="og:site_name" content="vprotocol.21no.de" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://vprotocol.21no.de" />
+
+  <link rel="stylesheet" href="https://assets.21no.de/fonts/fonts.css" />
+  <link rel="stylesheet" href="https://assets.21no.de/css/tokens.css" />
+  <link rel="stylesheet" href="https://assets.21no.de/css/base.css" />
+  <link rel="stylesheet" href="https://assets.21no.de/css/nav.css" />
+  <link rel="stylesheet" href="https://assets.21no.de/css/hero.css" />
+  <link rel="stylesheet" href="https://assets.21no.de/css/buttons.css" />
+  <link rel="stylesheet" href="https://assets.21no.de/css/cards.css" />
+  <link rel="stylesheet" href="https://assets.21no.de/css/footer.css" />
+
+  <style>
+    :root {
+      --bg-primary: #0a0a0b;
+      --bg-card: #16161a;
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-card: rgba(255,255,255,0.08);
+      --text-primary: #ededef;
+      --text-secondary: #9b9ba3;
+      --text-tertiary: #6b6b75;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56,189,248,0.12);
+      --accent-subtle: rgba(56,189,248,0.08);
+      --green: #3dd68c;
+      --green-subtle: rgba(61,214,140,0.1);
+      --red: #f87171;
+      --yellow: #f5d90a;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+      --max-width: 1100px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* === Hero === */
+    .hero { padding: 120px 24px 100px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(ellipse at 50% 30%, rgba(56,189,248,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent-subtle);
+      border: 1px solid rgba(56,189,248,0.2);
+      color: var(--accent);
+      padding: 6px 16px; border-radius: 999px;
+      font-size: 13px; font-weight: 500; margin-bottom: 28px;
+      position: relative;
+    }
+    .hero-badge .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 64px); font-weight: 700;
+      color: #fff; letter-spacing: -2px; line-height: 1.05;
+      margin-bottom: 20px; position: relative;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero .subtitle {
+      font-size: clamp(16px, 2vw, 20px); font-weight: 300;
+      color: var(--text-secondary); max-width: 640px;
+      margin: 0 auto 40px; line-height: 1.5; position: relative;
+    }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px; border-radius: var(--radius-md);
+      font-size: 15px; font-weight: 500; text-decoration: none;
+      transition: all 0.2s; cursor: pointer; border: none;
+    }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-primary:hover { background: #7dd3fc; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(56,189,248,0.25); }
+    .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-card); }
+    .btn-secondary:hover { border-color: var(--accent); color: #fff; }
+
+    /* === Stats === */
+    .stats { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; padding: 0 24px 80px; }
+    .stat { text-align: center; }
+    .stat-value { font-size: 36px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+    .stat-label { font-size: 13px; color: var(--text-tertiary); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* === Sections === */
+    section { padding: 80px 24px; }
+    .section-inner { max-width: var(--max-width); margin: 0 auto; }
+    .section-label {
+      font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+      color: var(--accent); text-transform: uppercase; letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(28px, 3.5vw, 40px); font-weight: 700;
+      color: #fff; letter-spacing: -1px; line-height: 1.15; margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 16px; color: var(--text-secondary); max-width: 640px;
+      line-height: 1.6; margin-bottom: 48px;
+    }
+
+    /* === Pipeline overview === */
+    .pipeline-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+    .pipeline-step {
+      background: var(--bg-card); border: 1px solid var(--border-card);
+      border-radius: var(--radius-md); padding: 24px; text-align: center;
+      transition: border-color 0.2s;
+    }
+    .pipeline-step:hover { border-color: var(--accent); }
+    .pipeline-step .emoji { font-size: 28px; margin-bottom: 12px; }
+    .pipeline-step h4 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+    .pipeline-step p { font-size: 13px; color: var(--text-tertiary); line-height: 1.5; }
+
+    /* === Five Whys === */
+    .why-item { margin-bottom: 48px; position: relative; }
+    .why-num {
+      font-family: var(--font-mono); font-size: 48px; font-weight: 700;
+      color: var(--accent); opacity: 0.15; line-height: 1; margin-bottom: -20px;
+    }
+    .why-item h3 { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 12px; letter-spacing: -0.3px; }
+    .why-item p { font-size: 15px; color: var(--text-secondary); line-height: 1.65; max-width: 680px; }
+    .why-item .cite {
+      margin-top: 12px; padding: 12px 16px;
+      background: var(--bg-card); border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 13px; color: var(--text-tertiary); font-style: italic; max-width: 680px;
+    }
+    .why-item .cite strong { color: var(--accent); font-style: normal; }
+
+    /* === Two columns === */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* === Feature cards === */
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .feature-card {
+      background: var(--bg-card); border: 1px solid var(--border-card);
+      border-radius: var(--radius-md); padding: 28px;
+    }
+    .feature-card h4 { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+    .feature-card code {
+      font-family: var(--font-mono); font-size: 13px;
+      background: rgba(56,189,248,0.1); color: var(--accent);
+      padding: 2px 6px; border-radius: 4px;
+    }
+
+    /* === Formula highlight === */
+    .formula-block {
+      background: var(--bg-card); border: 1px solid var(--border-card);
+      border-radius: var(--radius-md); padding: 24px 28px;
+      text-align: center; margin: 32px 0;
+    }
+    .formula-block code {
+      font-family: var(--font-mono); font-size: 18px;
+      color: var(--accent); background: none;
+    }
+
+    /* === CTA section === */
+    .cta-section {
+      text-align: center; padding: 100px 24px 120px;
+      background: radial-gradient(ellipse at 50% 50%, rgba(56,189,248,0.05) 0%, transparent 70%);
+    }
+    .cta-section .section-title { margin-bottom: 12px; }
+    .cta-section .subtitle { font-size: 16px; color: var(--text-secondary); margin-bottom: 32px; }
+    .cta-section a.btn { font-size: 16px; padding: 14px 36px; }
+
+    /* === Footer === */
+    footer {
+      border-top: 1px solid var(--border-subtle); padding: 40px 24px;
+      text-align: center; color: var(--text-tertiary); font-size: 13px;
+    }
+    footer a { color: var(--text-secondary); text-decoration: none; }
+    footer a:hover { color: var(--text-primary); }
+
+    /* === Responsive === */
+    @media (max-width: 640px) {
+      .hero { padding: 80px 16px 60px; }
+      .stats { gap: 20px; }
+      .stat-value { font-size: 28px; }
+      section { padding: 48px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://21no.de" class="nav-logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="6" fill="#38bdf8"/>
+        <text x="14" y="20" text-anchor="middle" fill="#0a0a0b" font-family="system-ui" font-weight="700" font-size="16">21</text>
+      </svg>
+      21no.de
+    </a>
+    <div class="nav-links">
+      <a href="https://21no.de">Home</a>
+      <a href="https://github.com/BackendStack21/ai-verification-protocol" target="_blank" rel="noopener">GitHub</a>
+      <a href="./ai-verification-protocol.md">Protocol &rarr;</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> v5.2.5 · Open Source</div>
+  <h1>The AI <span>Verification</span> Protocol</h1>
+  <p class="subtitle">
+    A multi-agent pipeline that diagnoses verification debt, repairs what it can, and produces machine-readable certificates — so humans audit the certificate, not the code.
+  </p>
+  <div class="hero-actions">
+    <a href="./ai-verification-protocol.md" class="btn btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Read the Protocol
+    </a>
+    <a href="https://github.com/BackendStack21/ai-verification-protocol" class="btn btn-secondary" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      GitHub
+    </a>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-value">~3,300:1</div>
+    <div class="stat-label">Cv/Ci Ratio Today</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">9</div>
+    <div class="stat-label">Verification Axes</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">5</div>
+    <div class="stat-label">Pipeline Agents</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">100&ndash;150&times;</div>
+    <div class="stat-label">Generation Cost Drop</div>
+  </div>
+</div>
+
+<!-- The Problem -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">The Problem</div>
+    <h2 class="section-title">AI generates code 16,000&times; cheaper than we can verify it</h2>
+    <p class="section-desc">
+      In 2023, generating a 200-line PR cost $0.30 and verifying it cost ~$50. Today, the same PR costs $0.0015 to generate — but verification still costs ~$50. The ratio has exploded from 33:1 to over 3,300:1, and it's degrading exponentially.
+    </p>
+    <div class="formula-block">
+      <code>Cv / Ci &rarr; &infin;</code>
+      <p style="margin-top:10px;font-size:14px;color:var(--text-tertiary)">
+        Cost-to-Verify &divide; Cost-to-Implement — the ratio that matters, tracked per PR, per module
+      </p>
+    </div>
+    <div class="pipeline-steps">
+      <div class="pipeline-step">
+        <div class="emoji">📥</div>
+        <h4>PR Arrives</h4>
+        <p>Agent A submits code. The pipeline classifies it — KnownGroundTruth, NovelBehavior, GeneratedCode, or GeneratedTests.</p>
+      </div>
+      <div class="pipeline-step">
+        <div class="emoji">🔍</div>
+        <h4>9 Axes Scanned</h4>
+        <p>Semantic correctness, behavioral contract, security surface, structural integrity, adversarial surface, documentation coverage, and more.</p>
+      </div>
+      <div class="pipeline-step">
+        <div class="emoji">🎲</div>
+        <h4>Sandbox + Fuzz</h4>
+        <p>10,000 scenarios replayed in a deterministic sandbox. Behavioral contracts extracted from the spec — never from the implementation.</p>
+      </div>
+      <div class="pipeline-step">
+        <div class="emoji">📊</div>
+        <h4>Certificate Signed</h4>
+        <p>Agent E derives &eta; from signals, tracks Cv/Ci, computes verification debt, and signs an in-toto attestation.</p>
+      </div>
+      <div class="pipeline-step">
+        <div class="emoji">👤</div>
+        <h4>Human Audits</h4>
+        <p>The human reviews the certificate — not the code. Auto-Approve, Human Review Recommended, or Human Review Required.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Five Whys -->
+<section style="background: rgba(255,255,255,0.01);">
+  <div class="section-inner">
+    <div class="section-label">The Five Whys</div>
+    <h2 class="section-title">Why is AI verification debt the defining problem of the next decade?</h2>
+    <p class="section-desc">
+      Root-cause analysis, cited from <a href="https://21no.de/viewer.html?file=publications/the-verification-trap.md&label=Whitepaper" style="color:var(--accent)">The AI Verification Debt</a> whitepaper.
+    </p>
+
+    <div class="why-item">
+      <div class="why-num">01</div>
+      <h3>Generation costs collapsed 100–150&times;. Verification costs haven't budged.</h3>
+      <p>
+        In March 2023, GPT-4 cost $30/$60 per 1M tokens. By May 2026, DeepSeek V4-Flash costs $0.14/$0.28 — two orders of magnitude cheaper. But human review is still capped at ~200 lines of code per hour, the same sustainable rate documented by SmartBear and Cisco since 2006. The bottleneck shifted from generation to verification overnight.
+      </p>
+      <div class="cite">
+        <strong>The AI Verification Debt</strong> &mdash; "The industry is celebrating the collapse of generation cost. That is half of the story. [...] Google's engineering practices recommend changes under 200–400 LOC for thorough review. The SmartBear/Cisco study found that reviewing 200–400 LOC/hour is the sustainable human rate for detecting meaningful defects."
+      </div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-num">02</div>
+      <h3>Automated tests inherit the same blind spots as the code they verify.</h3>
+      <p>
+        If the same model generates both the implementation and its tests, an error mode the model systematically reproduces passes through both layers undetected. The automated filtering efficiency &eta; is not an independent variable — it degrades dynamically as the shared generation loop introduces correlated failures. The protocol detects this via the correlation penalty &rho; and enforces provider-family diversity across pipeline agents.
+      </p>
+      <div class="cite">
+        <strong>The AI Verification Debt</strong> &mdash; "If the same model generates both the implementation and the filters that verify it, &eta; is not an independent variable. An error mode that the model systematically reproduces will pass through both layers undetected — the automated filter inherits the same blind spot as the code it is validating."
+      </div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-num">03</div>
+      <h3>Unverified code compounds — each module adds uncertainty to the entire dependency graph.</h3>
+      <p>
+        Every AI-generated feature shipped without a corresponding verification investment degrades your ability to autonomously ship the next feature. The agent generating the next PR cannot self-evaluate its impact on unverified code — it has no ground truth about what the unverified module actually does. The protocol tracks this as <em>verification debt</em> per module, with interest rates for hot paths.
+      </p>
+      <div class="cite">
+        <strong>The AI Verification Debt</strong> &mdash; "Verification debt is the accumulated gap between the volume of generated code and the volume of verified behavior. [...] This is a compounding liability, not a fixed cost. Each unverified module adds uncertainty to the entire dependency graph."
+      </div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-num">04</div>
+      <h3>The components exist — they're just not wired together.</h3>
+      <p>
+        Property-based testing (QuickCheck), fuzzing, SAST, deterministic replay sandboxes, behavioral contract differencing, SLSA/in-toto attestation — all exist as isolated tools. What's missing is an orchestration and provenance layer that connects them into a coherent verification pipeline. The protocol is that layer: a unified spec that coordinates five agents across these tools and produces a single auditable certificate.
+      </p>
+      <div class="cite">
+        <strong>The AI Verification Debt</strong> &mdash; "The industry built the accelerator. It also built most of the brake components. Nobody has connected them into a braking system that a driver can use at highway speed."
+      </div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-num">05</div>
+      <h3>The Cv/Ci ratio is already ~3,300:1 and degrading exponentially.</h3>
+      <p>
+        Projecting forward: if the price war between US and Chinese labs continues and inference costs drop another 10&times;, the ratio hits ~16,700:1. The team that invests in verification infrastructure can safely ship 10&times; more code than the team that invests in better generation alone. The team that does not — will drown in verification debt within this decade.
+      </p>
+      <div class="cite">
+        <strong>The AI Verification Debt</strong> &mdash; "The trap is not that the code is bad. The trap is that <em>nobody knows how bad it is</em> until the verification debt compounds. [...] The team that invests in verification infrastructure can safely ship 10&times; more code than the team that invests in better generation alone."
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">Technical Depth</div>
+    <h2 class="section-title">How the protocol works</h2>
+    <p class="section-desc">
+      The protocol is both a specification and a system prompt — it can be loaded into any capable AI model playing a pipeline role, or read as a standalone guide for building verification infrastructure.
+    </p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>&eta; Derivation from Signals</h4>
+        <p>
+          Automated filtering efficiency is computed mechanically from seven observable signals: <code>m</code> (mutation kill rate), <code>o</code> (oracle agreement), <code>b</code> (branch coverage), <code>f</code> (fuzz survival), <code>s</code> (SAST clean rate), <code>t</code> (static depth), and <code>d</code> (doc coverage).
+        </p>
+      </div>
+      <div class="feature-card">
+        <h4>&rho; Correlation Penalty</h4>
+        <p>
+          Quantifies how dependent verification artifacts are on the generator — family overlap, version overlap, AST similarity, and shared mutation survival patterns. &rho; > 0.30 triggers <code>CannotVerify</code> regardless of &eta;.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h4>Spec Independence Check</h4>
+        <p>
+          Detects when the same author wrote the spec and the code within 7 days — a form of correlator-break laundering. Flagged in the certificate for human audit, priced into &rho;.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h4>Auto-Repair with Guardrails</h4>
+        <p>
+          Documentation gaps, missing tests, and type mismatches are auto-remediated. Behavior-changing fixes are human-only. Five-gate repair verification prevents regressions.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h4>Machine-Readable Certificates</h4>
+        <p>
+          JSON certificates with in-toto attestation. Downstream CI gates, deploy pipelines, and audit dashboards consume them. Markdown rendering for human auditors.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h4>Meta-Audit Loop</h4>
+        <p>
+          5% of certificates sampled monthly for ground-truth comparison. Brier scoring detects calibration drift. Weights auto-recalibrate against observed defect outcomes.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="section-title">Ready to measure what matters?</h2>
+  <p class="subtitle">
+    Read the full protocol — 12 sections, 4 appendices, 35 documented pitfalls. Version 5.2.5.
+  </p>
+  <a href="./ai-verification-protocol.md" class="btn btn-primary" style="font-size:16px;padding:14px 36px;">
+    Read the Protocol &rarr;
+  </a>
+  <p style="margin-top:24px;font-size:14px;color:var(--text-tertiary)">
+    Or <a href="https://github.com/BackendStack21/ai-verification-protocol" style="color:var(--accent)">clone the repo</a> to integrate it into your CI/CD pipeline.
+  </p>
+</section>
+
+<footer>
+  <p>
+    <a href="https://21no.de">21no.de</a> &mdash; AI-native infrastructure and systems engineering research lab.
+    <br>
+    Companion to <a href="https://21no.de/viewer.html?file=publications/the-verification-trap.md&label=Whitepaper">The AI Verification Debt</a> whitepaper.
+  </p>
+</footer>
+
+</body>
+</html>

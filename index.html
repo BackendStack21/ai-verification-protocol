@@ -197,12 +197,85 @@
     footer a { color: var(--text-secondary); text-decoration: none; }
     footer a:hover { color: var(--text-primary); }
 
+    /* === Certificate Carousel === */
+    .cert-carousel {
+      max-width: 880px; margin: 48px auto 0; position: relative;
+    }
+    .cert-slides { overflow: hidden; border-radius: var(--radius-lg); }
+    .cert-slide {
+      display: none; grid-template-columns: auto 1fr;
+      gap: 28px; align-items: start;
+      background: var(--bg-card); border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg); padding: 28px 32px;
+      animation: certFadeIn 0.4s ease;
+    }
+    .cert-slide.active { display: grid; }
+    @keyframes certFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .cert-verdict {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 16px 20px; border-radius: var(--radius-md);
+      font-family: var(--font-mono); font-size: 12px; text-align: center;
+      min-width: 120px;
+    }
+    .cert-verdict.green { background: var(--green-subtle); border: 1px solid rgba(61,214,140,0.2); }
+    .cert-verdict.yellow { background: rgba(245,217,10,0.08); border: 1px solid rgba(245,217,10,0.2); }
+    .cert-verdict.red { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); }
+    .cert-verdict .v-badge {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.6px; padding: 4px 10px; border-radius: 999px;
+    }
+    .cert-verdict.green .v-badge { background: var(--green); color: #000; }
+    .cert-verdict.yellow .v-badge { background: var(--yellow); color: #000; }
+    .cert-verdict.red .v-badge { background: var(--red); color: #000; }
+    .cert-verdict .v-icon { font-size: 24px; }
+    .cert-verdict .v-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.4; }
+    .cert-body { min-width: 0; }
+    .cert-body .cert-pr {
+      font-family: var(--font-mono); font-size: 13px; color: var(--text-secondary);
+      margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);
+    }
+    .cert-body .cert-pr strong { color: #fff; }
+    .cert-metrics {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px; margin-bottom: 12px;
+    }
+    .cert-metric {
+      background: rgba(255,255,255,0.03); border-radius: var(--radius-sm);
+      padding: 10px 12px; text-align: center;
+    }
+    .cert-metric .m-val { font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: #fff; }
+    .cert-metric .m-label { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+    .cert-body .cert-reason {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.5;
+      padding: 10px 14px; background: rgba(255,255,255,0.02);
+      border-radius: var(--radius-sm); border-left: 3px solid var(--accent);
+    }
+    .cert-body .cert-reason strong { color: var(--accent); }
+    .carousel-controls {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin-top: 16px;
+    }
+    .carousel-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--border-card); border: none; cursor: pointer;
+      transition: all 0.2s; padding: 0;
+    }
+    .carousel-dot.active { background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+    .carousel-dot:hover { background: var(--text-tertiary); }
+    .carousel-label {
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);
+      margin-left: 8px; letter-spacing: 0.5px;
+    }
+
     /* === Responsive === */
     @media (max-width: 640px) {
       .hero { padding: 80px 16px 60px; }
       .stats { gap: 20px; }
       .stat-value { font-size: 28px; }
       section { padding: 48px 16px; }
+      .cert-slide { grid-template-columns: 1fr; gap: 16px; padding: 20px; }
+      .cert-verdict { flex-direction: row; min-width: auto; justify-content: center; gap: 16px; }
+      .cert-metrics { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -241,6 +314,91 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
       GitHub
     </a>
+  </div>
+
+  <!-- Certificate Carousel -->
+  <div class="cert-carousel">
+    <div class="cert-slides">
+      <div class="cert-slide active" data-verdict="approve">
+        <div class="cert-verdict green">
+          <div class="v-icon">✅</div>
+          <div class="v-badge">AutoApprove</div>
+          <div class="v-desc">Merge proceeds<br/>no human needed</div>
+        </div>
+        <div class="cert-body">
+          <div class="cert-pr">PR <strong>#142</strong> · fix: race condition in connection pool · <strong>+48 −12</strong> LOC</div>
+          <div class="cert-metrics">
+            <div class="cert-metric"><div class="m-val">0.94</div><div class="m-label">η (efficiency)</div></div>
+            <div class="cert-metric"><div class="m-val">0.04</div><div class="m-label">ρ (correlation)</div></div>
+            <div class="cert-metric"><div class="m-val">12:1</div><div class="m-label">Cv / Ci</div></div>
+            <div class="cert-metric"><div class="m-val">0.6h</div><div class="m-label">Δ Debt</div></div>
+          </div>
+          <div class="cert-reason"><strong>Why:</strong> mutation kill rate 97%, 100% branch coverage on changed lines, provider families: Anthropic (gen) vs DeepSeek (verify) — pipeline diversity avoids shared blind spots.</div>
+        </div>
+      </div>
+
+      <div class="cert-slide" data-verdict="recommend">
+        <div class="cert-verdict yellow">
+          <div class="v-icon">⚠️</div>
+          <div class="v-badge">Human Review<br/>Recommended</div>
+          <div class="v-desc">Merge allowed<br/>review suggested</div>
+        </div>
+        <div class="cert-body">
+          <div class="cert-pr">PR <strong>#287</strong> · feat: add WebSocket upgrade handler · <strong>+312 −89</strong> LOC</div>
+          <div class="cert-metrics">
+            <div class="cert-metric"><div class="m-val">0.82</div><div class="m-label">η (efficiency)</div></div>
+            <div class="cert-metric"><div class="m-val">0.08</div><div class="m-label">ρ (correlation)</div></div>
+            <div class="cert-metric"><div class="m-val">180:1</div><div class="m-label">Cv / Ci</div></div>
+            <div class="cert-metric"><div class="m-val">2.4h</div><div class="m-label">Δ Debt</div></div>
+          </div>
+          <div class="cert-reason"><strong>Why:</strong> axis 2.5 (behavioral exploration) flagged ⚠️ — sandbox revealed 3 edge-case timeouts under concurrent close. All 3 auto-remediated. Human should verify the fix doesn't mask a deeper ordering bug.</div>
+        </div>
+      </div>
+
+      <div class="cert-slide" data-verdict="required">
+        <div class="cert-verdict red">
+          <div class="v-icon">🔴</div>
+          <div class="v-badge">Human Review<br/>Required</div>
+          <div class="v-desc">Merge blocked<br/>must inspect</div>
+        </div>
+        <div class="cert-body">
+          <div class="cert-pr">PR <strong>#391</strong> · feat: OAuth2 token refresh with encrypted storage · <strong>+647 −23</strong> LOC</div>
+          <div class="cert-metrics">
+            <div class="cert-metric"><div class="m-val">0.71</div><div class="m-label">η (efficiency)</div></div>
+            <div class="cert-metric"><div class="m-val">0.12</div><div class="m-label">ρ (correlation)</div></div>
+            <div class="cert-metric"><div class="m-val">890:1</div><div class="m-label">Cv / Ci</div></div>
+            <div class="cert-metric"><div class="m-val">4.1h</div><div class="m-label">Δ Debt</div></div>
+          </div>
+          <div class="cert-reason"><strong>Why:</strong> axis 2.3 (security surface) 🔴 — new crypto code with 3 SAST-high findings. PR size cap triggered (647 LOC in security path). Certificate identifies exact files and lines for human auditor to inspect.</div>
+        </div>
+      </div>
+
+      <div class="cert-slide" data-verdict="cannot">
+        <div class="cert-verdict red" style="border-color:rgba(248,113,113,0.35);">
+          <div class="v-icon">🛑</div>
+          <div class="v-badge">Cannot<br/>Verify</div>
+          <div class="v-desc">Pipeline abort<br/>return to author</div>
+        </div>
+        <div class="cert-body">
+          <div class="cert-pr">PR <strong>#503</strong> · feat: speculative decoding cache with custom allocator · <strong>+1,892 −0</strong> LOC</div>
+          <div class="cert-metrics">
+            <div class="cert-metric"><div class="m-val">—</div><div class="m-label">η (efficiency)</div></div>
+            <div class="cert-metric"><div class="m-val">0.38</div><div class="m-label">ρ (correlation)</div></div>
+            <div class="cert-metric"><div class="m-val">∞</div><div class="m-label">Cv / Ci</div></div>
+            <div class="cert-metric"><div class="m-val">—</div><div class="m-label">Δ Debt</div></div>
+          </div>
+          <div class="cert-reason"><strong>Why:</strong> ρ exceeds 0.30 cap — agent A and agent D share OpenAI o4-mini; AST similarity 0.82. PR size 1,892 LOC exceeds 1,500 hard cap. PR must be split into ≤500 LOC chunks with a different verifier family per chunk.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="carousel-controls">
+      <button class="carousel-dot active" data-index="0" aria-label="AutoApprove"></button>
+      <button class="carousel-dot" data-index="1" aria-label="HumanReviewRecommended"></button>
+      <button class="carousel-dot" data-index="2" aria-label="HumanReviewRequired"></button>
+      <button class="carousel-dot" data-index="3" aria-label="CannotVerify"></button>
+      <span class="carousel-label">certificate previews</span>
+    </div>
   </div>
 </section>
 
@@ -425,6 +583,41 @@
     Companion to <a href="https://21no.de/viewer.html?file=publications/the-verification-trap.md&label=Whitepaper">The AI Verification Debt</a> whitepaper.
   </p>
 </footer>
+
+<script>
+(function(){
+  var slides = document.querySelectorAll('.cert-slide');
+  var dots = document.querySelectorAll('.carousel-dot');
+  var current = 0;
+  var interval = 6000;
+  var timer;
+
+  function show(idx) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (idx + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  function next() { show(current + 1); }
+
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      show(parseInt(this.dataset.index));
+      clearInterval(timer);
+      timer = setInterval(next, interval);
+    });
+  });
+
+  timer = setInterval(next, interval);
+
+  // Pause on hover
+  var carousel = document.querySelector('.cert-carousel');
+  carousel.addEventListener('mouseenter', function(){ clearInterval(timer); });
+  carousel.addEventListener('mouseleave', function(){ timer = setInterval(next, interval); });
+})();
+</script>
 
 </body>
 </html>

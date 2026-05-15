@@ -4,7 +4,7 @@ subtitle: "Diagnose, repair, and measure — a structured protocol for AI verifi
 date: 2026-05-12
 tags: [verification, review, protocol, AI, infrastructure, debt, provenance, pipeline]
 derived_from: The AI Verification Debt (21no.de, 2026)
-version: 5.2.5
+version: 5.2.6
 ---
 
 # The AI Verification Protocol
@@ -460,7 +460,7 @@ The certificate is **machine-readable JSON with a markdown rendering**. JSON dri
   "$schema": "https://21no.de/schemas/verification-certificate-v5.json",
   "certificate_id": "uuid",
   "created_at": "ISO-8601 UTC",
-  "protocol_version": "5.2.5",
+  "protocol_version": "5.2.6",
   "weights_version": "weights_v5.1.0",
   "partial": false,
   "pr": {

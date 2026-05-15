@@ -336,7 +336,7 @@ All "share family / version / lineage" comparisons are **Agent D (test generator
 Every certificate MUST report:
 - η (derived value)
 - ρ (correlation penalty)
-- The six sub-signals (m, o, b, f, s, t) with their measured values
+- The seven sub-signals (m, o, b, f, s, t, d) with their measured values
 - The weights used (in case they were locally tuned)
 
 ### 3.7 Recalibration Cadence
@@ -1003,7 +1003,7 @@ Who audits Agent B? The protocol itself, on a schedule.
 For each sampled certificate compare predicted defect probability `(1 − η)` against observed escape (binary 0/1). Compute:
 
 - **Calibration error:** Brier score over the sample.
-- **Per-signal residuals:** which signal (m, o, b, f, s, t) most strongly predicts escapes the current weights miss?
+- **Per-signal residuals:** which signal (m, o, b, f, s, t, d) most strongly predicts escapes the current weights miss?
 
 ### 8.3 Weight Update
 

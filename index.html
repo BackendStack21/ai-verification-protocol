@@ -358,8 +358,8 @@
         <div class="cert-body">
           <div class="cert-pr">PR <strong>#142</strong> · fix: race condition in connection pool · <strong>+48 −12</strong> LOC</div>
           <div class="cert-metrics">
-            <div class="cert-metric"><div class="m-val">0.94</div><div class="m-label">η (efficiency)</div></div>
-            <div class="cert-metric"><div class="m-val">0.04</div><div class="m-label">ρ (correlation)</div></div>
+            <div class="cert-metric"><div class="m-val">0.97</div><div class="m-label">η (efficiency)</div></div>
+            <div class="cert-metric"><div class="m-val">0.03</div><div class="m-label">ρ (correlation)</div></div>
             <div class="cert-metric"><div class="m-val">12:1</div><div class="m-label">Cv / Ci</div></div>
             <div class="cert-metric"><div class="m-val">0.6h</div><div class="m-label">Δ Debt</div></div>
           </div>
@@ -417,7 +417,7 @@
             <div class="cert-metric"><div class="m-val">∞</div><div class="m-label">Cv / Ci</div></div>
             <div class="cert-metric"><div class="m-val">—</div><div class="m-label">Δ Debt</div></div>
           </div>
-          <div class="cert-reason"><strong>Why:</strong> ρ exceeds 0.30 cap — agent A and agent D share OpenAI o4-mini; AST similarity 0.82. PR size 1,892 LOC exceeds 1,500 hard cap. PR must be split into ≤500 LOC chunks with a different verifier family per chunk.</div>
+          <div class="cert-reason"><strong>Why:</strong> ρ exceeds 0.30 cap — agent A and agent D share OpenAI o4-mini; AST similarity 0.82. PR must be re-verified with a different verifier family.</div>
         </div>
       </div>
     </div>
@@ -438,7 +438,7 @@
     <div class="section-label">The Problem</div>
     <h2 class="section-title">AI generates code 16,000&times; cheaper than we can verify it</h2>
     <p class="section-desc">
-      In 2023, generating a 200-line PR cost $0.30 and verifying it cost ~$50. Today, the same PR costs $0.0015 to generate — but verification still costs ~$50. The ratio has exploded from 33:1 to over 3,300:1, and it's degrading exponentially.
+      In 2023, generating a 200-line PR cost $0.30 and verifying it cost ~$50. Today, the same PR costs $0.015 to generate — but verification still costs ~$50. The ratio has exploded from 33:1 to over 3,300:1, and it's degrading exponentially.
     </p>
     <div class="formula-block">
       <code>Cv / Ci &rarr; &infin;</code>

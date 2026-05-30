@@ -58,7 +58,7 @@ flowchart TD
     MA -->|"Stop-ship would breach"| QUEUE["⏸ Block merge;<br/>PR returns to author"]
 ```
 
-The protocol is versioned. **v3.0** added Active Repair Mode. **v3.1** hardened structural vulnerabilities. **v4.0** closed the measurement loop: Ci/Cv per PR, η derived from signals, multi-agent diversity enforced, certificates machine-readable, meta-audit recalibrates against ground truth. Prompt lineage made optional — `generator_identity` alone anchors ρ. **v5.0**: spec bar universal, axis 2.9 (doc coverage) added, auto-correction mandatory. **v5.1**: spec independence recalibrated — contributes to ρ + flags axis 2.2 as ⚠️, no mechanical floor. **v5.2.x**: 13 patches hardening the protocol's internal consistency — axes count reconciled (8→9), temporal paradoxes resolved (ρ moved to E, Mermaid bifurcation collapsed), infinite invalidation loop fixed (cert bound to post-repair SHA), nomenclature unified (LOC_filtered), Gate 2/3 deadlock sealed (same-family → human-only), category errors corrected (CannotVerify is a verdict), division-by-zero guarded (Ci=$0 → ratio null).
+The protocol is versioned. **v3.0** added Active Repair Mode. **v3.1** hardened structural vulnerabilities. **v4.0** closed the measurement loop: Ci/Cv per PR, η derived from signals, multi-agent diversity enforced, certificates machine-readable, meta-audit recalibrates against ground truth. Prompt lineage made optional — `generator_identity` alone anchors ρ. **v5.0**: spec bar universal, axis 2.9 (doc coverage) added, auto-correction mandatory. **v5.1**: spec independence recalibrated — contributes to ρ + flags axis 2.2 as ⚠️, no mechanical floor. **v5.2.x**: 13 patches hardening the protocol's internal consistency — axes count reconciled (8→9), temporal paradoxes resolved (ρ moved to E, Mermaid bifurcation collapsed), infinite invalidation loop fixed (cert bound to post-repair SHA), nomenclature unified (LOC_filtered), Gate 2/3 deadlock sealed (same-family → human-only), category errors corrected (CannotVerify is a verdict), division-by-zero guarded (Ci=$0 → ratio null). **v5.2.6**: rendering and consistency fixes — §7.5 same-family constraint moved out of its code fence; three table rows repaired (§6.1, §6.6); 3-attempt cap scoped per-PR (§6.7, §7.5); §3.5 ρ table given its fifth `spec_independence` row (rows now sum to the stated 0.30 cap); §3.5 cross-references the §0.2 unknown-identity fallback; §3.8 size-cap ceiling annotated `HumanReviewRequired` per §0.3.
 
 ---
 
@@ -316,12 +316,15 @@ The correlation score `ρ ∈ [0, 0.30]` quantifies how dependent the verificati
 
 All "share family / version / lineage" comparisons are **Agent D (test generator) vs. Agent A (code generator)** — not "the verifier" abstractly. Under the §0.1 diversity rule, a healthy pipeline keeps these rows at 0 by construction; non-zero values mean the diversity rule fell back to the §0.1 prompt-lineage fallback.
 
+**Unknown `generator_identity`.** When Agent A's `generator_identity` is absent, the family and version sub-signals take their **maximum contribution** (same-family, +0.10 / +0.05) per the §0.2 unknown-identity fallback — the comparison cannot be proven diverse, so it is treated as fully correlated.
+
 | Sub-signal | Range | Contribution |
 |------------|-------|--------------|
 | Agent D and Agent A share provider family | 0 / 0.10 | +0.10 if same family |
 | Agent D and Agent A share model version (e.g., both Opus 4.7) | 0 / 0.05 | +0.05 if identical |
 | Test code AST similarity to implementation (normalized tree edit distance) | 0–0.05 | `0.05 × (1 − distance)` |
 | Shared mutation-survival pattern (mutants that both code and test fail to detect, normalized) | 0–0.05 | direct contribution |
+| Spec independence (`spec_independence`): Agent C's contract is not independent of Agent A's generator (§6.5.1) | 0 / 0.05 | +0.05 if not independent |
 
 **Cap:** ρ ≤ 0.30. Above that, classify the PR as `Cannot Verify` regardless of axes. Under a fully diverse pipeline (D family ≠ A family, D version ≠ A version) the realistic ρ ceiling is ≈ 0.10 — driven by AST similarity and shared mutation survival alone.
 
@@ -357,7 +360,7 @@ verdict = max_severity(
     ρ_band(eta.rho),
     ΔDebt_band(debt.delta_hours),
     gap_band(verification_gap),
-    pr_size_cap(LOC_changed),
+    pr_size_cap(LOC_changed),   # ceiling: HumanReviewRequired, never CannotVerify (§0.3)
     axis_failures(axes)
 )
 ```
@@ -644,8 +647,8 @@ When an axis returns ⚠️ or 🔴, prescribe actions from this map. Multiple a
 | **Behavioral Exploration** | Replay sandbox (§6.2-F) + chaos injection | Property-based tests for race conditions |
 | **Dependency Integrity** | Pin to safe ranges + SBOM diff review | Audit transitive dep provenance |
 | **Generator Provenance** | Require `generator_identity` (§0.2); reject PR if absent for `Generated*` classes | Independent audit by different model family |
- **Adversarial Surface** | Taint analysis + sanitizer at sink | Replace dangerous sink (e.g., `pickle` → `json`); scope tool grants per call |
- **Documentation Coverage** | Auto-generate doc patch covering all public API changes (§6.2-H) | Manual doc review for behavioral semantics |
+| **Adversarial Surface** | Taint analysis + sanitizer at sink | Replace dangerous sink (e.g., `pickle` → `json`); scope tool grants per call |
+| **Documentation Coverage** | Auto-generate doc patch covering all public API changes (§6.2-H) | Manual doc review for behavioral semantics |
 
 ### 6.2 Concrete Remediation Actions
 
@@ -804,7 +807,7 @@ This check does not forbid the author-writes-both pattern (often legitimate, e.g
 | Integration boundary tests | ⚠️ With caution | Agent may hallucinate the contract |
 | Sanitizer at adversarial sink | 🔐 Patch only — never auto-apply | Behavior-changing; route via §7.1 human-only path |
 | Credential injection / input validators | 🔐 Patch only — never auto-apply | See §7.1 |
- Documentation generation | ✅ Yes | Additive doc patch; never changes behavior |
+| Documentation generation | ✅ Yes | Additive doc patch; never changes behavior |
 
 ### 6.7 Economic Decision Framework: Remediate vs Accept
 
@@ -820,7 +823,7 @@ This check does not forbid the author-writes-both pattern (often legitimate, e.g
 - `RemediationEffort > AccumulatedDebt × InterestRate` → **Defer**
 - `RemediationEffort < AccumulatedDebt × InterestRate × 0.5` → **Remediate immediately**
 
-**Compute ceiling:** auto-repair loop has a hard cap of **3 attempts**. After 3 failures, agent reverts and flags `🔴 COMPUTE CEILING REACHED`.
+**Compute ceiling:** auto-repair loop has a hard cap of **3 attempts**. The cap is **per-PR across the entire repair loop, not per-finding**: all auto-repairable findings in a PR share one budget of 3 attempts. After 3 failures, agent reverts and flags `🔴 COMPUTE CEILING REACHED`.
 
 ### 6.8 Debt Tracking Register
 
@@ -944,13 +947,13 @@ Gate 2: η_raw IMPROVED (η before ρ-penalty must rise; gating on
 Gate 3: ΔDebt DECREASED
 Gate 4: NO NEW WARNINGS (re-scan adversarial + security axes)
 Gate 5: REPAIR IS REVERSIBLE (own commit or patch)
+```
 
 **Same-family constraint (mandatory).** If Agent D shares a provider family with Agent A, the Gates 2/3 deadlock is mathematically unavoidable: same-family tests increase ρ, which drops the penalized η. A drop in η guarantees a Gate 3 failure — ΔDebt = (1 − η) × Cv_raw × LOC_filtered increases when η decreases. Gate 2 passes on η_raw while Gate 3 deterministically fails on the penalized η.
 
 Therefore: if Agent D's provider family matches Agent A's, **auto-generated tests MUST NOT be auto-applied**. Route them to the human-only patch queue per §7.1. A human auditor can evaluate whether the ρ increase is acceptable against the η_raw improvement. This constraint replaces the prior "Preferred" advisory — it is not optional.
-```
 
-If any gate fails and attempts remain (< 3 total): **pass failure context to the next attempt.** The input to Attempt N+1 MUST include: (a) the applied patch from Attempt N, (b) the specific gate that failed and the measured values that failed it (e.g., `<failed_attempt reason="eta_decreased" before="0.82" after="0.79">...</failed_attempt>`), and (c) the diff between pre-repair and post-repair η and ΔDebt. Without this context, the agent is likely to deterministically regenerate the same failing patch — burning the repair budget without learning.
+If any gate fails and attempts remain (< 3 total — the budget is **per-PR across all auto-repairable findings**, not per-finding, per §6.7): **pass failure context to the next attempt.** The input to Attempt N+1 MUST include: (a) the applied patch from Attempt N, (b) the specific gate that failed and the measured values that failed it (e.g., `<failed_attempt reason="eta_decreased" before="0.82" after="0.79">...</failed_attempt>`), and (c) the diff between pre-repair and post-repair η and ΔDebt. Without this context, the agent is likely to deterministically regenerate the same failing patch — burning the repair budget without learning.
 
 If any gate fails and attempts are exhausted (3 failures): revert, flag, recommend human intervention. **Scope of revert: only the auto-applied repair commits are reverted; Agent A's original commits are untouched.** The certificate is still emitted, with `verdict: HumanReviewRequired` and a `repair_failed: true` flag in the rationale.
 

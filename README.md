@@ -64,6 +64,7 @@ Minimum two distinct provider families across B/C/D. Same-family pipelines pay t
 
 ## Version History
 
+- **v5.2.6** — 5 accuracy fixes: signal count corrected, carousel verdict thresholds, website math, §3.6/§8.2 stale references
 - **v5.2.x** — 13 patches hardening internal consistency (axes count, temporal paradoxes, invalidation loop, Gate 2/3 deadlock, nomenclature unification)
 - **v5.1** — Spec independence recalibrated: contributes to ρ, flags axis 2.2, no mechanical floor
 - **v5.0** — Spec bar universal, axis 2.9 (doc coverage) added, auto-correction mandatory

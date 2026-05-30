@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>The AI Verification Protocol — vprotocol.21no.de</title>
   <meta name="description" content="Diagnose, repair, and measure verification debt in AI-generated code. A multi-agent pipeline that derives η from signals, tracks Ci/Cv ratios, and produces machine-readable certificates." />
+  <meta name="keywords" content="AI verification protocol, verification debt, AI code review, automated verification, multi-agent pipeline, η derivation, ρ correlation, Ci/Cv ratio, in-toto attestation, SLSA, code provenance, software verification" />
+  <meta name="author" content="21no.de" />
   <meta name="theme-color" content="#0a0a0b" />
 
   <meta property="og:type" content="website" />
@@ -13,8 +15,15 @@
   <meta property="og:description" content="Diagnose, repair, and measure — the operational answer to AI verification debt." />
   <meta property="og:image" content="https://vprotocol.21no.de/og.svg" />
   <meta property="og:site_name" content="vprotocol.21no.de" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="The AI Verification Protocol — diagnose, repair, and measure" />
+  <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="canonical" href="https://vprotocol.21no.de" />
+
+  <link rel="icon" type="image/svg+xml" href="og.svg" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://assets.21no.de; font-src 'self' https://assets.21no.de; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'" />
 
   <link rel="stylesheet" href="https://assets.21no.de/fonts/fonts.css" />
   <link rel="stylesheet" href="https://assets.21no.de/css/tokens.css" />
@@ -197,14 +206,108 @@
     footer a { color: var(--text-secondary); text-decoration: none; }
     footer a:hover { color: var(--text-primary); }
 
+    /* === Certificate Carousel === */
+    .cert-carousel {
+      max-width: 880px; margin: 48px auto 0; position: relative;
+    }
+    .cert-slides { overflow: hidden; border-radius: var(--radius-lg); }
+    .cert-slide {
+      display: none; grid-template-columns: auto 1fr;
+      gap: 28px; align-items: start;
+      background: var(--bg-card); border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg); padding: 28px 32px;
+      animation: certFadeIn 0.4s ease;
+    }
+    .cert-slide.active { display: grid; }
+    @keyframes certFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .cert-verdict {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 16px 20px; border-radius: var(--radius-md);
+      font-family: var(--font-mono); font-size: 12px; text-align: center;
+      min-width: 120px;
+    }
+    .cert-verdict.green { background: var(--green-subtle); border: 1px solid rgba(61,214,140,0.2); }
+    .cert-verdict.yellow { background: rgba(245,217,10,0.08); border: 1px solid rgba(245,217,10,0.2); }
+    .cert-verdict.red { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); }
+    .cert-verdict .v-badge {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.6px; padding: 4px 10px; border-radius: 999px;
+    }
+    .cert-verdict.green .v-badge { background: var(--green); color: #000; }
+    .cert-verdict.yellow .v-badge { background: var(--yellow); color: #000; }
+    .cert-verdict.red .v-badge { background: var(--red); color: #000; }
+    .cert-verdict .v-icon { font-size: 24px; }
+    .cert-verdict .v-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.4; }
+    .cert-body { min-width: 0; }
+    .cert-body .cert-pr {
+      font-family: var(--font-mono); font-size: 13px; color: var(--text-secondary);
+      margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);
+    }
+    .cert-body .cert-pr strong { color: #fff; }
+    .cert-metrics {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px; margin-bottom: 12px;
+    }
+    .cert-metric {
+      background: rgba(255,255,255,0.03); border-radius: var(--radius-sm);
+      padding: 10px 12px; text-align: center;
+    }
+    .cert-metric .m-val { font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: #fff; }
+    .cert-metric .m-label { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+    .cert-body .cert-reason {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.5;
+      padding: 10px 14px; background: rgba(255,255,255,0.02);
+      border-radius: var(--radius-sm); border-left: 3px solid var(--accent);
+    }
+    .cert-body .cert-reason strong { color: var(--accent); }
+    .carousel-controls {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin-top: 16px;
+    }
+    .carousel-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--border-card); border: none; cursor: pointer;
+      transition: all 0.2s; padding: 0;
+    }
+    .carousel-dot.active { background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+    .carousel-dot:hover { background: var(--text-tertiary); }
+    .carousel-label {
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);
+      margin-left: 8px; letter-spacing: 0.5px;
+    }
+
     /* === Responsive === */
     @media (max-width: 640px) {
       .hero { padding: 80px 16px 60px; }
       .stats { gap: 20px; }
       .stat-value { font-size: 28px; }
       section { padding: 48px 16px; }
+      .cert-slide { grid-template-columns: 1fr; gap: 16px; padding: 20px; }
+      .cert-verdict { flex-direction: row; min-width: auto; justify-content: center; gap: 16px; }
+      .cert-metrics { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "name": "The AI Verification Protocol",
+        "url": "https://vprotocol.21no.de",
+        "description": "A multi-agent pipeline that diagnoses verification debt, repairs what it can, and produces machine-readable certificates.",
+        "sameAs": ["https://github.com/BackendStack21/ai-verification-protocol"]
+      },
+      {
+        "@type": "WebSite",
+        "name": "The AI Verification Protocol",
+        "url": "https://vprotocol.21no.de",
+        "description": "A multi-agent pipeline that diagnoses verification debt, repairs what it can, and produces machine-readable certificates."
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -242,27 +345,92 @@
       GitHub
     </a>
   </div>
-</section>
 
-<!-- Stats -->
-<div class="stats">
-  <div class="stat">
-    <div class="stat-value">~3,300:1</div>
-    <div class="stat-label">Cv/Ci Ratio Today</div>
+  <!-- Certificate Carousel -->
+  <div class="cert-carousel">
+    <div class="cert-slides">
+      <div class="cert-slide active" data-verdict="approve">
+        <div class="cert-verdict green">
+          <div class="v-icon">✅</div>
+          <div class="v-badge">AutoApprove</div>
+          <div class="v-desc">Merge proceeds<br/>no human needed</div>
+        </div>
+        <div class="cert-body">
+          <div class="cert-pr">PR <strong>#142</strong> · fix: race condition in connection pool · <strong>+48 −12</strong> LOC</div>
+          <div class="cert-metrics">
+            <div class="cert-metric"><div class="m-val">0.97</div><div class="m-label">η (efficiency)</div></div>
+            <div class="cert-metric"><div class="m-val">0.03</div><div class="m-label">ρ (correlation)</div></div>
+            <div class="cert-metric"><div class="m-val">12:1</div><div class="m-label">Cv / Ci</div></div>
+            <div class="cert-metric"><div class="m-val">0.6h</div><div class="m-label">Δ Debt</div></div>
+          </div>
+          <div class="cert-reason"><strong>Why:</strong> mutation kill rate 97%, 100% branch coverage on changed lines, provider families: Anthropic (gen) vs DeepSeek (verify) — pipeline diversity avoids shared blind spots.</div>
+        </div>
+      </div>
+
+      <div class="cert-slide" data-verdict="recommend">
+        <div class="cert-verdict yellow">
+          <div class="v-icon">⚠️</div>
+          <div class="v-badge">Human Review<br/>Recommended</div>
+          <div class="v-desc">Merge allowed<br/>review suggested</div>
+        </div>
+        <div class="cert-body">
+          <div class="cert-pr">PR <strong>#287</strong> · feat: add WebSocket upgrade handler · <strong>+312 −89</strong> LOC</div>
+          <div class="cert-metrics">
+            <div class="cert-metric"><div class="m-val">0.82</div><div class="m-label">η (efficiency)</div></div>
+            <div class="cert-metric"><div class="m-val">0.08</div><div class="m-label">ρ (correlation)</div></div>
+            <div class="cert-metric"><div class="m-val">180:1</div><div class="m-label">Cv / Ci</div></div>
+            <div class="cert-metric"><div class="m-val">2.4h</div><div class="m-label">Δ Debt</div></div>
+          </div>
+          <div class="cert-reason"><strong>Why:</strong> axis 2.5 (behavioral exploration) flagged ⚠️ — sandbox revealed 3 edge-case timeouts under concurrent close. All 3 auto-remediated. Human should verify the fix doesn't mask a deeper ordering bug.</div>
+        </div>
+      </div>
+
+      <div class="cert-slide" data-verdict="required">
+        <div class="cert-verdict red">
+          <div class="v-icon">🔴</div>
+          <div class="v-badge">Human Review<br/>Required</div>
+          <div class="v-desc">Merge blocked<br/>must inspect</div>
+        </div>
+        <div class="cert-body">
+          <div class="cert-pr">PR <strong>#391</strong> · feat: OAuth2 token refresh with encrypted storage · <strong>+647 −23</strong> LOC</div>
+          <div class="cert-metrics">
+            <div class="cert-metric"><div class="m-val">0.71</div><div class="m-label">η (efficiency)</div></div>
+            <div class="cert-metric"><div class="m-val">0.12</div><div class="m-label">ρ (correlation)</div></div>
+            <div class="cert-metric"><div class="m-val">890:1</div><div class="m-label">Cv / Ci</div></div>
+            <div class="cert-metric"><div class="m-val">4.1h</div><div class="m-label">Δ Debt</div></div>
+          </div>
+          <div class="cert-reason"><strong>Why:</strong> axis 2.3 (security surface) 🔴 — new crypto code with 3 SAST-high findings. PR size cap triggered (647 LOC in security path). Certificate identifies exact files and lines for human auditor to inspect.</div>
+        </div>
+      </div>
+
+      <div class="cert-slide" data-verdict="cannot">
+        <div class="cert-verdict red" style="border-color:rgba(248,113,113,0.35);">
+          <div class="v-icon">🛑</div>
+          <div class="v-badge">Cannot<br/>Verify</div>
+          <div class="v-desc">Pipeline abort<br/>return to author</div>
+        </div>
+        <div class="cert-body">
+          <div class="cert-pr">PR <strong>#503</strong> · feat: speculative decoding cache with custom allocator · <strong>+1,892 −0</strong> LOC</div>
+          <div class="cert-metrics">
+            <div class="cert-metric"><div class="m-val">—</div><div class="m-label">η (efficiency)</div></div>
+            <div class="cert-metric"><div class="m-val">0.38</div><div class="m-label">ρ (correlation)</div></div>
+            <div class="cert-metric"><div class="m-val">∞</div><div class="m-label">Cv / Ci</div></div>
+            <div class="cert-metric"><div class="m-val">—</div><div class="m-label">Δ Debt</div></div>
+          </div>
+          <div class="cert-reason"><strong>Why:</strong> ρ exceeds 0.30 cap — agent A and agent D share OpenAI o4-mini; AST similarity 0.82. PR must be re-verified with a different verifier family.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="carousel-controls">
+      <button class="carousel-dot active" data-index="0" aria-label="AutoApprove"></button>
+      <button class="carousel-dot" data-index="1" aria-label="HumanReviewRecommended"></button>
+      <button class="carousel-dot" data-index="2" aria-label="HumanReviewRequired"></button>
+      <button class="carousel-dot" data-index="3" aria-label="CannotVerify"></button>
+      <span class="carousel-label">certificate previews</span>
+    </div>
   </div>
-  <div class="stat">
-    <div class="stat-value">9</div>
-    <div class="stat-label">Verification Axes</div>
-  </div>
-  <div class="stat">
-    <div class="stat-value">5</div>
-    <div class="stat-label">Pipeline Agents</div>
-  </div>
-  <div class="stat">
-    <div class="stat-value">100&ndash;150&times;</div>
-    <div class="stat-label">Generation Cost Drop</div>
-  </div>
-</div>
+</section>
 
 <!-- The Problem -->
 <section>
@@ -270,7 +438,7 @@
     <div class="section-label">The Problem</div>
     <h2 class="section-title">AI generates code 16,000&times; cheaper than we can verify it</h2>
     <p class="section-desc">
-      In 2023, generating a 200-line PR cost $0.30 and verifying it cost ~$50. Today, the same PR costs $0.0015 to generate — but verification still costs ~$50. The ratio has exploded from 33:1 to over 3,300:1, and it's degrading exponentially.
+      In 2023, generating a 200-line PR cost $0.30 and verifying it cost ~$50. Today, the same PR costs $0.015 to generate — but verification still costs ~$50. The ratio has exploded from 33:1 to over 3,300:1, and it's degrading exponentially.
     </p>
     <div class="formula-block">
       <code>Cv / Ci &rarr; &infin;</code>
@@ -428,7 +596,7 @@
 <section class="cta-section">
   <h2 class="section-title">Ready to measure what matters?</h2>
   <p class="subtitle">
-    Read the full protocol — 12 sections, 4 appendices, 35 documented pitfalls. Version 5.2.6.
+    Read the full protocol — 14 sections, 2 appendices, and 7 critical pitfalls with 35+ rule-level safeguards. Version 5.2.6.
   </p>
   <a href="./ai-verification-protocol.md" class="btn btn-primary" style="font-size:16px;padding:14px 36px;">
     Read the Protocol &rarr;
@@ -445,6 +613,41 @@
     Companion to <a href="https://21no.de/viewer.html?file=publications/the-verification-trap.md&label=Whitepaper">The AI Verification Debt</a> whitepaper.
   </p>
 </footer>
+
+<script>
+(function(){
+  var slides = document.querySelectorAll('.cert-slide');
+  var dots = document.querySelectorAll('.carousel-dot');
+  var current = 0;
+  var interval = 6000;
+  var timer;
+
+  function show(idx) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (idx + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  function next() { show(current + 1); }
+
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      show(parseInt(this.dataset.index));
+      clearInterval(timer);
+      timer = setInterval(next, interval);
+    });
+  });
+
+  timer = setInterval(next, interval);
+
+  // Pause on hover
+  var carousel = document.querySelector('.cert-carousel');
+  carousel.addEventListener('mouseenter', function(){ clearInterval(timer); });
+  carousel.addEventListener('mouseleave', function(){ timer = setInterval(next, interval); });
+})();
+</script>
 
 </body>
 </html>

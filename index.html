@@ -399,7 +399,7 @@
             <div class="cert-metric"><div class="m-val">890:1</div><div class="m-label">Cv / Ci</div></div>
             <div class="cert-metric"><div class="m-val">4.1h</div><div class="m-label">Δ Debt</div></div>
           </div>
-          <div class="cert-reason"><strong>Why:</strong> axis 2.3 (security surface) 🔴 — new crypto code with 3 SAST-high findings. PR size cap triggered (647 LOC in security path). Certificate identifies exact files and lines for human auditor to inspect.</div>
+          <div class="cert-reason"><strong>Why:</strong> axis 2.3 (security surface) 🔴 — new crypto code with 3 SAST-high findings. η 0.71 sits below the 0.80 auto-threshold, and a 🔴 security axis forces Human Review Required. Certificate identifies exact files and lines for human auditor to inspect.</div>
         </div>
       </div>
 
@@ -436,9 +436,9 @@
 <section>
   <div class="section-inner">
     <div class="section-label">The Problem</div>
-    <h2 class="section-title">AI generates code 16,000&times; cheaper than we can verify it</h2>
+    <h2 class="section-title">AI generates code 3,300&times; cheaper than we can verify it</h2>
     <p class="section-desc">
-      In 2023, generating a 200-line PR cost $0.30 and verifying it cost ~$50. Today, the same PR costs $0.015 to generate — but verification still costs ~$50. The ratio has exploded from 33:1 to over 3,300:1, and it's degrading exponentially.
+      In 2023, generating a 200-line PR cost $0.30 and verifying it cost ~$50. Today, the same PR costs $0.015 to generate — but verification still costs ~$50. The ratio has exploded from 167:1 to over 3,300:1, and it's degrading exponentially.
     </p>
     <div class="formula-block">
       <code>Cv / Ci &rarr; &infin;</code>
@@ -487,9 +487,9 @@
 
     <div class="why-item">
       <div class="why-num">01</div>
-      <h3>Generation costs collapsed 100–150&times;. Verification costs haven't budged.</h3>
+      <h3>Generation costs collapsed ~20&times;. Verification costs haven't budged.</h3>
       <p>
-        In March 2023, GPT-4 cost $30/$60 per 1M tokens. By May 2026, DeepSeek V4-Flash costs $0.14/$0.28 — two orders of magnitude cheaper. But human review is still capped at ~200 lines of code per hour, the same sustainable rate documented by SmartBear and Cisco since 2006. The bottleneck shifted from generation to verification overnight.
+        In March 2023, GPT-4 cost $30/$60 per 1M tokens. By May 2026, DeepSeek V4-Flash costs $0.14/$0.28 — token prices fell roughly two orders of magnitude, yet per-PR generation cost dropped ~20&times; as agents grew more token-hungry. But human review is still capped at ~200 lines of code per hour, the same sustainable rate documented by SmartBear and Cisco since 2006. The bottleneck shifted from generation to verification overnight.
       </p>
       <div class="cite">
         <strong>The AI Verification Debt</strong> &mdash; "The industry is celebrating the collapse of generation cost. That is half of the story. [...] Google's engineering practices recommend changes under 200–400 LOC for thorough review. The SmartBear/Cisco study found that reviewing 200–400 LOC/hour is the sustainable human rate for detecting meaningful defects."
@@ -533,7 +533,7 @@
       <div class="why-num">05</div>
       <h3>The Cv/Ci ratio is already ~3,300:1 and degrading exponentially.</h3>
       <p>
-        Projecting forward: if the price war between US and Chinese labs continues and inference costs drop another 10&times;, the ratio hits ~16,700:1. The team that invests in verification infrastructure can safely ship 10&times; more code than the team that invests in better generation alone. The team that does not — will drown in verification debt within this decade.
+        Projecting forward: if the price war between US and Chinese labs continues and inference costs drop another 10&times;, the ratio hits ~33,000:1. The team that invests in verification infrastructure can safely ship 10&times; more code than the team that invests in better generation alone. The team that does not — will drown in verification debt within this decade.
       </p>
       <div class="cite">
         <strong>The AI Verification Debt</strong> &mdash; "The trap is not that the code is bad. The trap is that <em>nobody knows how bad it is</em> until the verification debt compounds. [...] The team that invests in verification infrastructure can safely ship 10&times; more code than the team that invests in better generation alone."

@@ -10,7 +10,7 @@
 
 ## The Problem
 
-AI generates code 16,000× cheaper than we can verify it. Generation costs dropped 100–150× since 2023. Human review is still capped at ~200 LOC/hour. The **Cv/Ci ratio** — cost-to-verify divided by cost-to-implement — has exploded from ~33:1 to **~3,300:1**, and it's degrading exponentially.
+AI generates code 3,300× cheaper than we can verify it. Per-PR generation cost dropped ~20× since 2023 (raw token prices fell ~200×). Human review is still capped at ~200 LOC/hour. The **Cv/Ci ratio** — cost-to-verify divided by cost-to-implement — has exploded from ~167:1 to **~3,300:1**, and it's degrading exponentially.
 
 ## The Answer
 

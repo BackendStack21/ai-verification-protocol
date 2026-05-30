@@ -64,7 +64,7 @@ The protocol is versioned. **v3.0** added Active Repair Mode. **v3.1** hardened 
 
 ## 0. Operating Context
 
-Generation costs have collapsed 100-150x. Verification costs have not budged. The industry is shipping code 10,000x faster than humans can review it, and the **verification gap** — the fraction of generated code receiving no meaningful verification before production — compounds daily.
+Per-PR generation cost has collapsed ~20x (raw token prices fell ~200x). Verification costs have not budged. The industry is shipping code 10,000x faster than humans can review it, and the **verification gap** — the fraction of generated code receiving no meaningful verification before production — compounds daily.
 
 This protocol operates as a **multi-agent pipeline**, not a single reviewer. The whitepaper's central correlated-failure warning forbids relying on any one model to verify another model's output unaided. Roles must be played by distinct model instances, ideally from distinct provider families.
 

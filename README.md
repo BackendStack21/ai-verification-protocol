@@ -2,7 +2,7 @@
 
 > **Diagnose, repair, and measure** — a multi-agent pipeline for AI verification that quantifies verification debt, derives η from observable signals, tracks Ci/Cv ratios, and produces machine-readable certificates with in-toto attestation.
 
-[![Version](https://img.shields.io/badge/version-5.2.5-blue)](ai-verification-protocol.md)
+[![Version](https://img.shields.io/badge/version-5.2.6-blue)](ai-verification-protocol.md)
 [![Website](https://img.shields.io/badge/website-vprotocol.21no.de-38bdf8)](https://vprotocol.21no.de)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 

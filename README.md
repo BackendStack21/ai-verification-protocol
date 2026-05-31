@@ -1,8 +1,8 @@
 # The AI Verification Protocol
 
-> **Diagnose, repair, and measure** — a multi-agent pipeline for AI verification that quantifies verification debt, derives η from observable signals, tracks Ci/Cv ratios, and produces machine-readable certificates with in-toto attestation.
+> **Diagnose, repair, and measure** — a multi-agent pipeline for AI verification that quantifies verification debt, derives η from observable signals, tracks Cv/Ci ratios, and produces machine-readable certificates with in-toto attestation.
 
-[![Version](https://img.shields.io/badge/version-5.2.6-blue)](ai-verification-protocol.md)
+[![Version](https://img.shields.io/badge/version-5.2.7-blue)](ai-verification-protocol.md)
 [![Website](https://img.shields.io/badge/website-vprotocol.21no.de-38bdf8)](https://vprotocol.21no.de)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -20,7 +20,7 @@ This protocol is the operational companion to the whitepaper [*The AI Verificati
 2. **Runs 9 verification axes** — semantic correctness, behavioral contract, security surface, structural integrity, adversarial surface, documentation coverage, and more
 3. **Derives η** from 7 observable signals (mutation kill rate, oracle agreement, branch coverage, fuzz survival, SAST clean rate, static depth, doc coverage)
 4. **Computes ρ** — the correlation penalty that quantifies how dependent verification artifacts are on the generator
-5. **Tracks Ci/Cv ratio** per PR, per module — including a human Ci floor for non-AI-generated code
+5. **Tracks Cv/Ci ratio** per PR, per module — including a human Ci floor for non-AI-generated code
 6. **Auto-repairs** documentation gaps, missing tests, and type mismatches (behavior-changing fixes are human-only)
 7. **Signs an in-toto attestation** — machine-readable JSON certificates for CI gates, deploy pipelines, and audit dashboards
 
@@ -64,11 +64,12 @@ Minimum two distinct provider families across B/C/D. Same-family pipelines pay t
 
 ## Version History
 
+- **v5.2.7** — Cost-ratio nomenclature reconciled: every `Ci/Cv` label corrected to `Cv/Ci` across protocol, README, and site so the label matches the §4 formula and the ~3,300:1 number
 - **v5.2.6** — 5 accuracy fixes: signal count corrected, carousel verdict thresholds, website math, §3.6/§8.2 stale references
 - **v5.2.x** — 13 patches hardening internal consistency (axes count, temporal paradoxes, invalidation loop, Gate 2/3 deadlock, nomenclature unification)
 - **v5.1** — Spec independence recalibrated: contributes to ρ, flags axis 2.2, no mechanical floor
 - **v5.0** — Spec bar universal, axis 2.9 (doc coverage) added, auto-correction mandatory
-- **v4.0** — Measurement loop closed: η derived from signals, Ci/Cv per PR, meta-audit
+- **v4.0** — Measurement loop closed: η derived from signals, Cv/Ci per PR, meta-audit
 - **v3.x** — Active Repair Mode, structural hardening
 
 Full protocol: [ai-verification-protocol.md](ai-verification-protocol.md)

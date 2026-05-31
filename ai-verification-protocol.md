@@ -1,16 +1,16 @@
 ---
 title: The AI Verification Protocol
-subtitle: "Diagnose, repair, and measure — a structured protocol for AI verification pipelines that quantifies verification debt, derives η from observable signals, tracks Ci/Cv ratios, and orchestrates a five-agent review pipeline with provenance attestation."
+subtitle: "Diagnose, repair, and measure — a structured protocol for AI verification pipelines that quantifies verification debt, derives η from observable signals, tracks Cv/Ci ratios, and orchestrates a five-agent review pipeline with provenance attestation."
 date: 2026-05-12
 tags: [verification, review, protocol, AI, infrastructure, debt, provenance, pipeline]
 derived_from: The AI Verification Debt (21no.de, 2026)
-version: 5.2.6
+version: 5.2.7
 ---
 
 # The AI Verification Protocol
 
 > **Companion to [The AI Verification Debt](publications/the-verification-trap.md)** — the whitepaper that established the economics. This protocol is the operational answer.
-> Core premise: Ci/Cv ratio has reached ~3,300:1 and is degrading exponentially.
+> Core premise: Cv/Ci ratio has reached ~3,300:1 and is degrading exponentially.
 > The verification pipeline's job is to narrow this gap — by diagnosing it, repairing it, and **measuring it** so the organization can see the trend.
 
 ---
@@ -38,7 +38,7 @@ flowchart TD
     SPEC -->|"No"| CV["🛑 Cannot Verify<br/>verdict: HumanReviewRequired"]
     SPEC -->|"Yes"| FZ["🎲 Agent D: Replay sandbox + fuzzing<br/>(10k scenarios OR 24h prod traffic;<br/>traffic-source provenance enforced)"]
     FZ --> AXES["📋 Run 9 Axes (B, D-payloads)"]
-    AXES --> E["📊 Agent E: re-derive η + ρ<br/>from raw signals (mandatory)<br/>compute ΔDebt, Ci/Cv, Gap"]
+    AXES --> E["📊 Agent E: re-derive η + ρ<br/>from raw signals (mandatory)<br/>compute ΔDebt, Cv/Ci, Gap"]
     E --> RD{"🔧 Auto-repairable<br/>findings?"}
     RD -->|"Yes"| R["🛠️ Generate + Apply"]
     RD -->|"No / done"| CERT
@@ -58,7 +58,7 @@ flowchart TD
     MA -->|"Stop-ship would breach"| QUEUE["⏸ Block merge;<br/>PR returns to author"]
 ```
 
-The protocol is versioned. **v3.0** added Active Repair Mode. **v3.1** hardened structural vulnerabilities. **v4.0** closed the measurement loop: Ci/Cv per PR, η derived from signals, multi-agent diversity enforced, certificates machine-readable, meta-audit recalibrates against ground truth. Prompt lineage made optional — `generator_identity` alone anchors ρ. **v5.0**: spec bar universal, axis 2.9 (doc coverage) added, auto-correction mandatory. **v5.1**: spec independence recalibrated — contributes to ρ + flags axis 2.2 as ⚠️, no mechanical floor. **v5.2.x**: 13 patches hardening the protocol's internal consistency — axes count reconciled (8→9), temporal paradoxes resolved (ρ moved to E, Mermaid bifurcation collapsed), infinite invalidation loop fixed (cert bound to post-repair SHA), nomenclature unified (LOC_filtered), Gate 2/3 deadlock sealed (same-family → human-only), category errors corrected (CannotVerify is a verdict), division-by-zero guarded (Ci=$0 → ratio null). **v5.2.6**: rendering and consistency fixes — §7.5 same-family constraint moved out of its code fence; three table rows repaired (§6.1, §6.6); 3-attempt cap scoped per-PR (§6.7, §7.5); §3.5 ρ table given its fifth `spec_independence` row (rows now sum to the stated 0.30 cap); §3.5 cross-references the §0.2 unknown-identity fallback; §3.8 size-cap ceiling annotated `HumanReviewRequired` per §0.3.
+The protocol is versioned. **v3.0** added Active Repair Mode. **v3.1** hardened structural vulnerabilities. **v4.0** closed the measurement loop: Cv/Ci per PR, η derived from signals, multi-agent diversity enforced, certificates machine-readable, meta-audit recalibrates against ground truth. Prompt lineage made optional — `generator_identity` alone anchors ρ. **v5.0**: spec bar universal, axis 2.9 (doc coverage) added, auto-correction mandatory. **v5.1**: spec independence recalibrated — contributes to ρ + flags axis 2.2 as ⚠️, no mechanical floor. **v5.2.x**: 13 patches hardening the protocol's internal consistency — axes count reconciled (8→9), temporal paradoxes resolved (ρ moved to E, Mermaid bifurcation collapsed), infinite invalidation loop fixed (cert bound to post-repair SHA), nomenclature unified (LOC_filtered), Gate 2/3 deadlock sealed (same-family → human-only), category errors corrected (CannotVerify is a verdict), division-by-zero guarded (Ci=$0 → ratio null). **v5.2.6**: rendering and consistency fixes — §7.5 same-family constraint moved out of its code fence; three table rows repaired (§6.1, §6.6); 3-attempt cap scoped per-PR (§6.7, §7.5); §3.5 ρ table given its fifth `spec_independence` row (rows now sum to the stated 0.30 cap); §3.5 cross-references the §0.2 unknown-identity fallback; §3.8 size-cap ceiling annotated `HumanReviewRequired` per §0.3. **v5.2.7**: cost-ratio nomenclature reconciled — every `Ci/Cv` label corrected to `Cv/Ci` (§4 title, §5.2 cert template, §0 premise, §12) so the label matches both the §4 formula (`Ratio = Cv($) / Ci`) and the ~3,300:1 headline number; README and website aligned to the same convention.
 
 ---
 
@@ -86,7 +86,7 @@ A pre-scan hit annotates the payload before any agent sees it, forces axis 2.8 t
 | **B** | Reviewer | Classifies PR, runs 9 axes, calls C/D, drives repair loop. (ρ is computed by Agent E at Step 6, once D's tests exist.) | **MUST** differ from A |
 | **C** | Contract formalizer | Reads PR description / ticket / spec (NEVER the implementation) and emits a machine-readable behavioral contract. | **MUST** differ from A |
 | **D** | Fuzzer / sandbox runner | Executes the deterministic replay sandbox and property/fuzz suites generated from C's contract. | **MUST** differ from A |
-| **E** | Certificate compiler | Aggregates B/C/D outputs, derives η, computes ΔDebt and Ci/Cv ratio, signs certificate. | **MAY** be same as B |
+| **E** | Certificate compiler | Aggregates B/C/D outputs, derives η, computes ΔDebt and Cv/Ci ratio, signs certificate. | **MAY** be same as B |
 | **Human auditor** | — | Reviews the certificate. Verdict authority. | — |
 
 **Diversity rule:** at minimum **two distinct provider families** must appear across {B, C, D}, AND the family producing tests (D) **MUST** differ from the family producing the contract (C). If B and D share a family, the reviewer-and-fuzzer pair share blind spots; if C and D share a family, Agent D effectively re-confirms Agent C rather than independently testing it.
@@ -379,9 +379,9 @@ The `rationale` field MUST name the binding gate(s) so the author and auditor ca
 
 ---
 
-## 4. Verification Debt and the Ci/Cv Ratio
+## 4. Verification Debt and the Cv/Ci Ratio
 
-Calculate the PR's contribution to verification debt, **and its position on the whitepaper's Ci/Cv curve**.
+Calculate the PR's contribution to verification debt, **and its position on the whitepaper's Cv/Ci curve**.
 
 ```
 Cv(raw)   = cost to verify one LOC (rate, hours/LOC)
@@ -463,7 +463,7 @@ The certificate is **machine-readable JSON with a markdown rendering**. JSON dri
   "$schema": "https://21no.de/schemas/verification-certificate-v5.json",
   "certificate_id": "uuid",
   "created_at": "ISO-8601 UTC",
-  "protocol_version": "5.2.6",
+  "protocol_version": "5.2.7",
   "weights_version": "weights_v5.1.0",
   "partial": false,
   "pr": {
@@ -587,7 +587,7 @@ The certificate is **machine-readable JSON with a markdown rendering**. JSON dri
 **Generator:** {model} {version} ({provider})
 **Pipeline diversity:** B={B}, C={C}, D={D} → {OK/INSUFFICIENT}
 **η:** {value} (signals m={m}, o={o}, b={b}, f={f}, s={s}, t={t}, d={d}; ρ={rho})
-**Ci/Cv ratio:** {ratio}  (Ci=${ci}, Cv=${cv})
+**Cv/Ci ratio:** {ratio}  (Ci=${ci}, Cv=${cv})
 **Verification Gap (module):** {x.xx} | **(repo):** {x.xx} {STOP-SHIP if true}
 
 ### Axes Summary (✅ / ⚠️ / 🔴 )
@@ -1106,7 +1106,7 @@ The log is retained indefinitely. Cost concerns are addressed by tiering older e
 3. Agent C extracts the behavioral contract from the spec (§6.2-B)
 4. Agent D runs the replay sandbox (§6.2-F) and fuzzing
 5. Agent B runs the 9 verification axes (§2)
-6. Agent E computes the full ρ from family/version/AST/shared-mutation sub-signals (§3.5) — now that D's tests exist — then derives η (§3.2), computes ΔDebt and Ci/Cv ratio (§4), Verification Gap (§4.5)
+6. Agent E computes the full ρ from family/version/AST/shared-mutation sub-signals (§3.5) — now that D's tests exist — then derives η (§3.2), computes ΔDebt and Cv/Ci ratio (§4), Verification Gap (§4.5)
 7. **For every ⚠️/🔴 finding, run the Repair Decision Tree (§7.1)**
 8. **If auto-repairable: Agent B generates repair patch (§6.2, §7.2) → Agent D re-runs tests → Agent E scores and evaluates Repair Gate (§7.5)** — loop back to step 8 with failure context if gate fails and attempts remain
 9. **If human-only: generate patch file, attach to certificate**
@@ -1165,6 +1165,6 @@ When a signal is unsupported, record it in `eta.signals_skipped` with `reason: "
 
 ## 13. Closing
 
-The whitepaper observed that the industry built the accelerator and most of the brake components, but never connected them into a braking system that works at highway speed. v3 was the disc rotor. v4 is the rest of the brake assembly: the multi-agent pipeline (calipers), the η derivation (master cylinder), Ci/Cv tracking and Verification Gap (the dashboard the driver actually watches), and the meta-audit (the brake-pad wear sensor).
+The whitepaper observed that the industry built the accelerator and most of the brake components, but never connected them into a braking system that works at highway speed. v3 was the disc rotor. v4 is the rest of the brake assembly: the multi-agent pipeline (calipers), the η derivation (master cylinder), Cv/Ci tracking and Verification Gap (the dashboard the driver actually watches), and the meta-audit (the brake-pad wear sensor).
 
 Human reviewers work with the certificate, not the code. Humans make the final verdict. The pipeline's job is to narrow the verification gap until the human's job becomes verification of the verification — and to publish, in a machine-readable form, the economic reality the whitepaper named: **Cv divided by Ci, watched over time, on every PR, in every module**.
